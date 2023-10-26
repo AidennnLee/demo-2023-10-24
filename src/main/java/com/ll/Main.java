@@ -1,28 +1,12 @@
 package com.ll;
 
-import java.io.FileReader;
-import java.io.FileWriter;
+import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.Scanner;
-//명령 : 명언 등록, 목록, 삭제, 수정, 프로그램 종료
+import java.io.UnsupportedEncodingException;
 
+//기능 : 명언 등록(번호 출력), 명언 목록(번호 포함), 삭제(예외처리), 수정, 파일 영속성, data.json 빌드, 종료
 class Main {
-    public static void main(String[] args){
+    public static void main(String[] args) throws IOException {
         new App().run();
-
-
-    }
-}
-
-class Word{
-    String word;
-    String author;
-
-    int wordNum;
-
-    Word(String word, String author, int wordNum){
-        this.word = word;
-        this.author = author;
-        this.wordNum = wordNum;
     }
 }
