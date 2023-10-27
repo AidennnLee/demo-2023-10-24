@@ -1,24 +1,16 @@
 package com.ll;
 
-import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
 public class App {
     Scanner scanner = new Scanner(System.in);
-
     List<Word> words = new ArrayList<>();
-    int wordNum = 0;
+    int wordId = 0;
 
-    public void run() throws IOException {
+    public void run(){
         System.out.println("== 명언 앱 ==");
-
-        //String word, author;
-
-        //String filePath = "c:\\Users\\yw010\\source\\demo20231024\\text.text";
-        //FileReader fin = new FileReader(filePath);
-        //FileWriter fout = new FileWriter(filePath);
 
         while (true){ //기능 : 명언 등록(번호 출력), 명언 목록(번호 포함), 삭제(예외처리), 수정, 파일 영속성, data.json 빌드, 종료
             System.out.print("명령) ");
@@ -28,61 +20,70 @@ public class App {
                 break;
             }
             else if(cmd.equals("등록")){
-                write();
+                addWord();
             }
             else if(cmd.equals("목록")){
-                read();
+                showList();
             }
             else if(cmd.startsWith("삭제")){
-                delete(cmd);
+                deleteWord(cmd);
             }
             else if(cmd.startsWith("수정")){
-                modify(cmd);
+                modifyWord(cmd);
             }
         }
         scanner.close();
-        //fin.close();
-        //fout.close();
     }
 
-    void write(){
+    private void addWord(){
         System.out.print("명언 : ");
-        String sectence = scanner.nextLine();
+        String sentence = scanner.nextLine();
         System.out.print("작가 : ");
         String author = scanner.nextLine();
-        //fout.write(sectence);
-        //fout.write(author);
-        //fout.write(wordNum);
-        Word word = new Word(sectence, author, ++wordNum);
+
+        Word word = new Word(sentence, author, ++wordId);
         words.add(word);
-        System.out.println(wordNum + "번 명언이 등록되었습니다.");
+        System.out.println(wordId + "번 명언이 등록되었습니다.");
     }
-    void read(){
+    private void showList(){
+        Word word;
         System.out.println("번호 / 작가 / 명언\n" +
                 "----------------------");
         for(int i = words.size() - 1; i >= 0; i--){
-            if(words.get(i) != null){
-                System.out.println(words.get(i).id + " / " + words.get(i).author + " / " + words.get(i).word);
+            word = words.get(i);
+            System.out.println(word.id + " / " + word.author + " / " + word.sentence);
+        }
+    }
+
+    private void deleteWord(String cmd){
+        int queryId = Integer.parseInt(cmd.substring(6));
+        Word word;
+
+        for(int i = 0; i < words.size(); i++){
+            word = words.get(i);
+            if(word.id == queryId){
+                words.remove(i);
+                System.out.println(queryId + "번 명언이 삭제되었습니다.");
+                return;
             }
         }
+        System.out.println(queryId + "번 명언은 존재하지 않습니다.");
     }
 
-    void delete(String cmd){
-        int queryIndex = Integer.parseInt(cmd.substring(6));
-        if(words.get(queryIndex - 1) == null){
-            System.out.println(queryIndex + "번 명언은 존재하지 않습니다.");
-        }
-        else{
-            words.set(queryIndex - 1, null);
-            System.out.println(queryIndex + "번 명언이 삭제되었습니다.");
-        }
-    }
+    private void modifyWord(String cmd){
+        int queryId = Integer.parseInt(cmd.substring(6));
+        Word word;
 
-    void modify(String cmd){
-        int queryIndex = Integer.parseInt(cmd.substring(6)) - 1;
-        System.out.print("명언(기존) : " + words.get(queryIndex).word + "\n명언 : ");
-        words.get(queryIndex).word = scanner.nextLine();
-        System.out.print("작가(기존) : " + words.get(queryIndex).author + "\n작가 : ");
-        words.get(queryIndex).author = scanner.nextLine();
+        for(int i = 0; i < words.size(); i++){
+            word = words.get(i);
+            if(word.id == queryId){
+                System.out.print("명언(기존) : " + word.sentence+ "\n명언 : ");
+                word.sentence = scanner.nextLine();
+                System.out.print("작가(기존) : " + word.author + "\n작가 : ");
+                word.author = scanner.nextLine();
+                return;
+            }
+        }
+        System.out.println(queryId + "번 명언은 존재하지 않습니다.");
     }
 }
